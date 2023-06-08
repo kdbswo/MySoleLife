@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.loci.mysolelife.R
+import com.loci.mysolelife.board.BoardInsideActivity
 import com.loci.mysolelife.board.BoardListLVAdapter
 import com.loci.mysolelife.board.BoardModel
 import com.loci.mysolelife.board.BoardWriteActivity
@@ -42,9 +43,17 @@ class TalkFragment : Fragment() {
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_talk, container, false)
 
-
         boardLVAdapter = BoardListLVAdapter(boardDataList)
         binding.boardListView.adapter = boardLVAdapter
+
+        binding.boardListView.setOnItemClickListener() { parent, view, position, id ->
+            val intent = Intent(context, BoardInsideActivity::class.java)
+            intent.putExtra("title", boardDataList[position].title)
+            intent.putExtra("content", boardDataList[position].content)
+            intent.putExtra("time", boardDataList[position].time)
+            startActivity(intent)
+
+        }
 
         binding.writeBtn.setOnClickListener {
             val intent = Intent(context, BoardWriteActivity::class.java)
@@ -83,6 +92,7 @@ class TalkFragment : Fragment() {
                     boardDataList.add(item!!)
 
                 }
+                boardDataList.reverse()
                 boardLVAdapter.notifyDataSetChanged()
                 Log.d(TAG, boardDataList.toString())
 
