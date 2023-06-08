@@ -47,5 +47,12 @@
             android:text="여기는 내용영역"
             android:textColor="@color/black" />
 
+        <ImageView
+            android:id="@+id/getImageArea"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_margin="30dp" />
+
+
     </LinearLayout>
 </layout>
