@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.loci.mysolelife.R
+import com.loci.mysolelife.comment.CommentModel
 import com.loci.mysolelife.databinding.ActivityBoardInsideBinding
 import com.loci.mysolelife.utils.FBAuth
 import com.loci.mysolelife.utils.FBRef
@@ -38,10 +39,24 @@ class BoardInsideActivity : AppCompatActivity() {
             showDialog()
         }
 
+
         key = intent.getStringExtra("key").toString()
         getBoardData(key)
         getImageData(key)
+
+        binding.commentBtn.setOnClickListener {
+            insertComment(key)
+        }
     }
+
+    fun insertComment(key: String) {
+        FBRef.commentRef.child(key).push()
+            .setValue(CommentModel(binding.commentArea.text.toString()))
+
+        Toast.makeText(this, "댓글 입력 완료", Toast.LENGTH_SHORT).show()
+        binding.commentArea.setText("")
+    }
+
 
     private fun showDialog() {
 
@@ -91,7 +106,7 @@ class BoardInsideActivity : AppCompatActivity() {
                     .load(task.result)
                     .into(imageViewFromFB)
             } else {
-
+                binding.getImageArea.isVisible = false
             }
 
         })
