@@ -3,7 +3,10 @@ package com.loci.mysolelife.board
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
@@ -22,24 +25,39 @@ class BoardInsideActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBoardInsideBinding
 
+    private lateinit var key: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_board_inside)
-        //첫번째 방법
-//        val title = intent.getStringExtra("title")
-//        val content = intent.getStringExtra("content")
-//        val time = intent.getStringExtra("time")
-//
-//        binding.titleArea.text = title
-//        binding.timeArea.text = time
-//        binding.contentArea.text = content
 
-//        두번째 방법
+        binding.boardSettingIcon.setOnClickListener {
+            showDialog()
+        }
 
-        val key = intent.getStringExtra("key")
-        getBoardData(key.toString())
-        getImageData(key.toString())
+        key = intent.getStringExtra("key").toString()
+        getBoardData(key)
+        getImageData(key)
     }
+
+    private fun showDialog() {
+
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+            .setTitle("게시글 수정/삭제")
+
+        val alertDialog = mBuilder.show()
+        alertDialog.findViewById<Button>(R.id.editBtn)?.setOnClickListener {
+            Toast.makeText(this, "aa", Toast.LENGTH_SHORT).show()
+        }
+        alertDialog.findViewById<Button>(R.id.removeBtn)?.setOnClickListener {
+            Toast.makeText(this, "bb", Toast.LENGTH_SHORT).show()
+
+        }
+
+    }
+
 
     private fun getImageData(key: String) {
         // Reference to an image file in Cloud Storage
@@ -50,12 +68,12 @@ class BoardInsideActivity : AppCompatActivity() {
 
         // Download directly from StorageReference using Glide
         // (See MyAppGlideModule for Loader registration)
-        storageReference.downloadUrl.addOnCompleteListener(OnCompleteListener{ task->
-            if(task.isSuccessful){
+        storageReference.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
+            if (task.isSuccessful) {
                 Glide.with(this)
                     .load(task.result)
                     .into(imageViewFromFB)
-            }else{
+            } else {
 
             }
 
