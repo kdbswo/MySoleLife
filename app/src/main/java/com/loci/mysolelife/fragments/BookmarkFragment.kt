@@ -17,7 +17,6 @@ import com.loci.mysolelife.R
 import com.loci.mysolelife.contentsList.BookmarkRVAdapter
 import com.loci.mysolelife.contentsList.ContentModel
 import com.loci.mysolelife.databinding.FragmentBookmarkBinding
-import com.loci.mysolelife.databinding.FragmentTalkBinding
 import com.loci.mysolelife.utils.FBAuth
 import com.loci.mysolelife.utils.FBRef
 
