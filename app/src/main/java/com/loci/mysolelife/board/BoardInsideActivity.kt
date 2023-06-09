@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.loci.mysolelife.R
+import com.loci.mysolelife.comment.CommentLVAdapter
 import com.loci.mysolelife.comment.CommentModel
 import com.loci.mysolelife.databinding.ActivityBoardInsideBinding
 import com.loci.mysolelife.utils.FBAuth
@@ -30,6 +31,11 @@ class BoardInsideActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBoardInsideBinding
 
     private lateinit var key: String
+
+    private val commentDataList = mutableListOf<CommentModel>()
+
+    private lateinit var commentLVAdapter: CommentLVAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +53,38 @@ class BoardInsideActivity : AppCompatActivity() {
         binding.commentBtn.setOnClickListener {
             insertComment(key)
         }
+
+        getCommentData(key)
+
+        commentLVAdapter = CommentLVAdapter(commentDataList)
+        binding.commentLV.adapter = commentLVAdapter
+
+    }
+
+    fun getCommentData(key: String) {
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                commentDataList.clear()
+
+                for (dataModel in dataSnapshot.children) {
+                    val item = dataModel.getValue(CommentModel::class.java)
+                    commentDataList.add(item!!)
+                }
+                commentLVAdapter.notifyDataSetChanged()
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+            }
+        }
+        FBRef.commentRef.child(key).addValueEventListener(postListener)
     }
 
     fun insertComment(key: String) {
         FBRef.commentRef.child(key).push()
-            .setValue(CommentModel(binding.commentArea.text.toString()))
+            .setValue(CommentModel(binding.commentArea.text.toString(), FBAuth.getTime()))
 
         Toast.makeText(this, "댓글 입력 완료", Toast.LENGTH_SHORT).show()
         binding.commentArea.setText("")

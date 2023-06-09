@@ -83,9 +83,9 @@
                     android:layout_marginRight="20dp" />
 
                 <ListView
+                    android:id="@+id/commentLV"
                     android:layout_width="match_parent"
-                    android:layout_height="600dp"
-                    android:background="#999999" />
+                    android:layout_height="600dp" />
 
             </LinearLayout>
         </ScrollView>
