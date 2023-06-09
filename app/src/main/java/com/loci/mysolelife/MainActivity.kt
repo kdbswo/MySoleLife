@@ -4,10 +4,12 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.loci.mysolelife.auth.IntroActivity
+import com.loci.mysolelife.setting.SettingActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,7 +21,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         auth = Firebase.auth
 
-
+        findViewById<ImageView>(R.id.settingBtn).setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
+        }
 
 
 
