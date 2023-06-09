@@ -52,8 +52,20 @@ class BoardInsideActivity : AppCompatActivity() {
             Toast.makeText(this, "aa", Toast.LENGTH_SHORT).show()
         }
         alertDialog.findViewById<Button>(R.id.removeBtn)?.setOnClickListener {
-            Toast.makeText(this, "bb", Toast.LENGTH_SHORT).show()
 
+
+            val storageRef = Firebase.storage.reference.child(key + ".png")
+
+            storageRef.delete().addOnSuccessListener {
+                Toast.makeText(this, "삭제완료",Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(this, "삭제실패",Toast.LENGTH_SHORT).show()
+            }
+
+            FBRef.boardRef.child(key).removeValue()
+            Toast.makeText(this, "삭제완료", Toast.LENGTH_SHORT).show()
+            alertDialog.dismiss()
+            finish()
         }
 
     }
@@ -86,12 +98,16 @@ class BoardInsideActivity : AppCompatActivity() {
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                val dataModel = dataSnapshot.getValue(BoardModel::class.java)
-                Log.d(TAG, dataModel!!.title)
+                try {
+                    val dataModel = dataSnapshot.getValue(BoardModel::class.java)
+                    Log.d(TAG, dataModel!!.title)
+                    binding.titleArea.text = dataModel!!.title
+                    binding.contentArea.text = dataModel!!.content
+                    binding.timeArea.text = dataModel!!.time
 
-                binding.titleArea.text = dataModel.title
-                binding.contentArea.text = dataModel.content
-                binding.timeArea.text = dataModel.time
+                } catch (e: Exception) {
+                    Log.d(TAG, "삭제완료")
+                }
 
             }
 
